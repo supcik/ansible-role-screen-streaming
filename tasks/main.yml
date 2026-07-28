@@ -1,0 +1,45 @@
+# SPDX-FileCopyrightText: 2026 Jacques Supcik <jacques.supci@hes-so.ch>
+#
+# SPDX-License-Identifier: MIT
+---
+- name: Validate system requirements
+  assert:
+    that:
+      - ansible_system | lower == 'linux'
+      - ansible_service_mgr == 'systemd'
+    fail_msg: 'This role requires a Linux system with systemd as the service manager.'
+
+- name: Install required packages
+  package:
+    name: '{{ item }}'
+    state: present
+  loop:
+    - ffmpeg
+
+- name: Install systemd service unit
+  ansible.builtin.template:
+    src: kiosk.service.j2
+    dest: /etc/systemd/system/kiosk.service
+    mode: '0644'
+  when:
+    - ansible_system | lower == 'linux'
+    - ansible_service_mgr == 'systemd'
+  notify:
+    - Reload systemd
+    - Restart kiosk
+
+- name: Ensure kiosk service is enabled and started
+  ansible.builtin.systemd:
+    name: kiosk
+    enabled: true
+    state: started
+    daemon_reload: true
+  when:
+    - ansible_system | lower == 'linux'
+    - ansible_service_mgr == 'systemd'
+
+- name: Set kernel video mode
+  ansible.builtin.lineinfile:
+    path: /boot/firmware/config.txt
+    regexp: '^#?video='
+    line: 'video={{ kiosk_kernel_video }}'

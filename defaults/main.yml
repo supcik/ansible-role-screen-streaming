@@ -1,0 +1,14 @@
+# SPDX-FileCopyrightText: 2026 Jacques Supcik <jacques.supci@hes-so.ch>
+#
+# SPDX-License-Identifier: MIT
+---
+screen_streaming_user: 'pi'
+screen_streaming_group: 'pi'
+screen_streaming_display: ':0'
+screen_streaming_resolution: '1920x1080'
+screen_streaming_port: 8554
+screen_streaming_path: '/kiosk'
+screen_streaming_framerate: 15
+screen_streaming_bitrate: '2M'
+screen_streaming_systemd_requires: 'mediamtx.service'
+screen_streaming_systemd_after: 'mediamtx.service kiosk.service'

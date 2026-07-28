@@ -1,0 +1,21 @@
+# SPDX-FileCopyrightText: 2026 Jacques Supcik <jacques.supci@hes-so.ch>
+#
+# SPDX-License-Identifier: MIT
+---
+- name: Reload systemd
+  ansible.builtin.systemd:
+    daemon_reload: true
+  when:
+    - ansible_system | lower == 'linux'
+    - ansible_service_mgr == 'systemd'
+
+- name: Restart display streaming service
+  ansible.builtin.systemd:
+    name: display-streamer
+    state: restarted
+    daemon_reload: true
+  when:
+    - ansible_system | lower == 'linux'
+    - ansible_service_mgr == 'systemd'
+  # Prevent errors if the systemd service file hasn't been created yet
+  ignore_errors: true
