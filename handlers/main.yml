@@ -9,7 +9,7 @@
     - ansible_facts["system"] | lower == 'linux'
     - ansible_facts["service_mgr"] == 'systemd'
 
-- name: Restart display streaming service
+- name: Restart screen-streaming
   ansible.builtin.systemd:
     name: screen-streaming
     state: restarted
