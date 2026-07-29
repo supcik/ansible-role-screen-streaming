@@ -12,11 +12,14 @@ User={{ screen_streaming_user }}
 Group={{ screen_streaming_group }}
 Environment=DISPLAY={{ screen_streaming_display }}
 Environment=XAUTHORITY=/home/{{ screen_streaming_user }}/.Xauthority
-ExecStart=/usr/bin/ffmpeg -f x11grab \
+ExecStart=/usr/bin/ffmpeg \
+  -f x11grab \
   -video_size {{ screen_streaming_resolution }} \
   -framerate {{ screen_streaming_framerate }} \
   -i {{ screen_streaming_display }}.0 \
-  -c:v h264_v4l2m2m -b:v {{ screen_streaming_bitrate }} \
+  -vf format=yuv420p \
+  -c:v h264_v4l2m2m \
+  -b:v {{ screen_streaming_bitrate }} \
   -f rtsp rtsp://localhost:{{ screen_streaming_port }}{{ screen_streaming_path }}
 Restart=always
 RestartSec=2
