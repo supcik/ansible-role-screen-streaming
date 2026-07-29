@@ -5,8 +5,8 @@
 - name: Validate system requirements
   assert:
     that:
-      - ansible_system | lower == 'linux'
-      - ansible_service_mgr == 'systemd'
+      - ansible_facts["system"] | lower == 'linux'
+      - ansible_facts["service_mgr"] == 'systemd'
     fail_msg: 'This role requires a Linux system with systemd as the service manager.'
 
 - name: Install required packages
@@ -18,28 +18,22 @@
 
 - name: Install systemd service unit
   ansible.builtin.template:
-    src: kiosk.service.j2
-    dest: /etc/systemd/system/kiosk.service
+    src: screen-streaming.service.j2
+    dest: /etc/systemd/system/screen-streaming.service
     mode: '0644'
   when:
-    - ansible_system | lower == 'linux'
-    - ansible_service_mgr == 'systemd'
+    - ansible_facts["system"] | lower == 'linux'
+    - ansible_facts["service_mgr"] == 'systemd'
   notify:
     - Reload systemd
-    - Restart kiosk
+    - Restart screen-streaming
 
-- name: Ensure kiosk service is enabled and started
+- name: Ensure screen-streaming service is enabled and started
   ansible.builtin.systemd:
-    name: kiosk
+    name: screen-streaming
     enabled: true
     state: started
     daemon_reload: true
   when:
-    - ansible_system | lower == 'linux'
-    - ansible_service_mgr == 'systemd'
-
-- name: Set kernel video mode
-  ansible.builtin.lineinfile:
-    path: /boot/firmware/config.txt
-    regexp: '^#?video='
-    line: 'video={{ kiosk_kernel_video }}'
+    - ansible_facts["system"] | lower == 'linux'
+    - ansible_facts["service_mgr"] == 'systemd'
