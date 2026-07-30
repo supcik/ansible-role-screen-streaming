@@ -31,8 +31,8 @@
 - name: Ensure screen-streaming service is enabled and started
   ansible.builtin.systemd:
     name: screen-streaming
-    enabled: true
-    state: started
+    enabled: '{{ screen_streaming_service_enabled }} | bool'
+    state: '{{ "started" if screen_streaming_service_enabled | bool else "stopped" }}'
     daemon_reload: true
   when:
     - ansible_facts["system"] | lower == 'linux'

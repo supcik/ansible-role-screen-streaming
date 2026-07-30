@@ -18,11 +18,20 @@ ExecStart=/usr/bin/ffmpeg \
   -framerate {{ screen_streaming_framerate }} \
   -i {{ screen_streaming_display }}.0 \
   -vf format=yuv420p \
+{% if screen_streaming_format == 'mpjpeg' %}
+  -f mpjpeg \
+  -q {{ screen_streaming_mpjpeg_quality }} \
+  -listen 1 http://0.0.0.0:{{ screen_streaming_port }}/
+{% else %}
   -c:v h264_v4l2m2m \
   -b:v {{ screen_streaming_bitrate }} \
   -f rtsp rtsp://localhost:{{ screen_streaming_port }}{{ screen_streaming_path }}
+{% endif %}
 Restart=always
 RestartSec=2
 
 [Install]
 WantedBy=multi-user.target
+
+
+

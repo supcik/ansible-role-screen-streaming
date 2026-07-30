@@ -17,5 +17,6 @@
   when:
     - ansible_facts["system"] | lower == 'linux'
     - ansible_facts["service_mgr"] == 'systemd'
+    - screen_streaming_service_enabled | bool
   # Prevent errors if the systemd service file hasn't been created yet
   ignore_errors: true

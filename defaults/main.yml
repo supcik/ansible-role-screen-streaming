@@ -2,6 +2,7 @@
 #
 # SPDX-License-Identifier: MIT
 ---
+screen_streaming_service_enabled: false
 screen_streaming_user: 'pi'
 screen_streaming_group: 'pi'
 screen_streaming_display: ':0'
@@ -12,3 +13,5 @@ screen_streaming_framerate: 15
 screen_streaming_bitrate: '2M'
 screen_streaming_systemd_requires: 'mediamtx.service'
 screen_streaming_systemd_after: 'mediamtx.service kiosk.service'
+screen_streaming_format: 'mpjpeg'
+screen_streaming_mpjpeg_quality: 5
