@@ -28,10 +28,10 @@
     - Reload systemd
     - Restart screen-streaming
 
-- name: Ensure screen-streaming service is enabled and started
+- name: Ensure screen-streaming service is enabled and in the desired state
   ansible.builtin.systemd:
     name: screen-streaming
-    enabled: '{{ screen_streaming_service_enabled }} | bool'
+    enabled: '{{ screen_streaming_service_enabled | bool }}'
     state: '{{ "started" if screen_streaming_service_enabled | bool else "stopped" }}'
     daemon_reload: true
   when:
